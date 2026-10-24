@@ -759,7 +759,7 @@
     {
       "id": "ito-compute",
       "kind": "skills",
-      "description": "Authenticated It\u00f4 GPU inventory, RFQ, status, device revocation, and explicitly gated node-qualification workflows through the separately installed canonical CLI.",
+      "description": "Authenticated Itô GPU inventory, RFQ, status, device revocation, and explicitly gated node-qualification workflows through the separately installed canonical CLI.",
       "paths": [
         "skills/ito-compute",
         "skills/ito-inference",
@@ -1451,6 +1451,103 @@
       "defaultInstall": false,
       "cost": "light",
       "stability": "stable"
+    },
+    {
+      "id": "personal-engineering",
+      "kind": "skills",
+      "description": "Imported third-party workflow skills: debugging, planning, spec/ticket writing, code review discipline, parallel-agent orchestration (Matt Pocock + obra/superpowers, MIT).",
+      "paths": [
+        "skills/codebase-design",
+        "skills/diagnosing-bugs",
+        "skills/domain-modeling",
+        "skills/grill-with-docs",
+        "skills/implement-spec",
+        "skills/implement",
+        "skills/improve-codebase-architecture",
+        "skills/prototype",
+        "skills/research",
+        "skills/retro",
+        "skills/to-spec",
+        "skills/to-tickets",
+        "skills/triage",
+        "skills/wayfinder",
+        "skills/wizard",
+        "skills/grill-me",
+        "skills/grilling",
+        "skills/handoff",
+        "skills/teach",
+        "skills/to-questionnaire",
+        "skills/wait-what",
+        "skills/writing-for-agents",
+        "skills/brainstorming",
+        "skills/diagnosing-superpowers",
+        "skills/dispatching-parallel-agents",
+        "skills/executing-plans",
+        "skills/finishing-a-development-branch",
+        "skills/receiving-code-review",
+        "skills/requesting-code-review",
+        "skills/subagent-driven-development",
+        "skills/systematic-debugging",
+        "skills/using-git-worktrees",
+        "skills/writing-plans",
+        "skills/writing-skills"
+      ],
+      "targets": [
+        "claude",
+        "claude-project",
+        "cursor",
+        "codex",
+        "copilot",
+        "opencode",
+        "codebuddy",
+        "joycode",
+        "qwen",
+        "zed"
+      ],
+      "dependencies": [
+        "platform-configs"
+      ],
+      "defaultInstall": false,
+      "cost": "light",
+      "stability": "beta"
+    },
+    {
+      "id": "personal-video",
+      "kind": "skills",
+      "description": "HyperFrames (HTML-to-video) skill set: rendering, captions, motion doctrine, media generation via external APIs (heygen-com/hyperframes, Apache-2.0). Heavy, opt-in.",
+      "paths": [
+        "skills/hyperframes",
+        "skills/hyperframes-cli",
+        "skills/hyperframes-registry",
+        "skills/media-use",
+        "skills/remotion-to-hyperframes",
+        "skills/slideshow",
+        "skills/figma",
+        "skills/motion-doctrine",
+        "skills/captions-overlay",
+        "skills/cut-the-curve",
+        "skills/seam-craft",
+        "skills/oversized-cursor",
+        "skills/changelog-video"
+      ],
+      "targets": [
+        "claude",
+        "claude-project",
+        "cursor",
+        "codex",
+        "copilot",
+        "opencode",
+        "codebuddy",
+        "joycode",
+        "qwen",
+        "zed"
+      ],
+      "dependencies": [
+        "platform-configs"
+      ],
+      "defaultInstall": false,
+      "cost": "heavy",
+      "stability": "beta"
     }
   ]
 }

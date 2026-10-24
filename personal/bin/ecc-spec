@@ -1,0 +1,94 @@
+#!/usr/bin/env node
+'use strict';
+
+/**
+ * Build the --spec for an Orca worker with ECC skills injected.
+ *
+ *   ecc-spec --skills tdd-workflow,python-patterns --task "Añade X" [--max-chars 9000] [--full]
+ *   ecc-spec --auto --task "Hay un bug al guardar el carrito"   (picks skills from config/skill-triggers.json)
+ *   ecc-spec --auto --skills extra-skill --task "..."           (auto matches are added to --skills, deduped)
+ *
+ * Output (stdout): preamble, the `ECC_REQUIRED_SKILLS:` tag the gates look for,
+ * each SKILL.md body (capped), the task, and the closing contract.
+ */
+
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
+const { loadTriggers, matchSkills } = require('../../scripts/lib/skill-router');
+
+const SKILLS_DIR = process.env.ECC_SKILLS_DIR || path.join(os.homedir(), '.ecc-shared', 'repo', 'skills');
+const TRIGGERS_PATH = process.env.ECC_TRIGGERS_FILE || path.join(__dirname, '..', '..', 'config', 'skill-triggers.json');
+const DEFAULT_MAX_CHARS = 9000;
+const AUTO_MAX_SKILLS = 3;
+
+function parseArgs(argv) {
+  const args = { skills: [], task: '', maxChars: DEFAULT_MAX_CHARS, auto: false };
+  for (let i = 0; i < argv.length; i++) {
+    const flag = argv[i];
+    if (flag === '--skills') args.skills = String(argv[++i] || '').split(',').map(s => s.trim()).filter(Boolean);
+    else if (flag === '--task') args.task = String(argv[++i] || '');
+    else if (flag === '--max-chars') args.maxChars = Number(argv[++i]) || DEFAULT_MAX_CHARS;
+    else if (flag === '--full') args.maxChars = Infinity;
+    else if (flag === '--auto') args.auto = true;
+    else throw new Error(`Argumento desconocido: ${flag}`);
+  }
+  return args;
+}
+
+function stripFrontmatter(text) {
+  return text.replace(/^---\n[\s\S]*?\n---\n/, '');
+}
+
+function loadSkill(name, maxChars, dir = SKILLS_DIR) {
+  if (!/^[A-Za-z0-9._-]+$/.test(name)) throw new Error(`Nombre de skill inválido: ${name}`);
+  const file = path.join(dir, name, 'SKILL.md');
+  if (!fs.existsSync(file)) throw new Error(`Skill no encontrada: ${name} (${file})`);
+  const body = stripFrontmatter(fs.readFileSync(file, 'utf8')).trim();
+  if (body.length <= maxChars) return body;
+  return `${body.slice(0, maxChars).trimEnd()}\n\n[... recortada; texto completo en ${file}]`;
+}
+
+// Picks skills from config/skill-triggers.json by matching --task text, then
+// merges with any explicit --skills (deduped, explicit first).
+function resolveAutoSkills(args, triggersPath = TRIGGERS_PATH) {
+  if (!args.auto) return args.skills;
+  if (!args.task) throw new Error('--auto necesita --task para elegir skills');
+  const triggers = loadTriggers(triggersPath);
+  const matches = matchSkills(args.task, triggers, { max: AUTO_MAX_SKILLS }).map(m => m.skill);
+  return [...new Set([...args.skills, ...matches])];
+}
+
+function buildSpec(args, dir = SKILLS_DIR, triggersPath = TRIGGERS_PATH) {
+  const skills = resolveAutoSkills(args, triggersPath);
+  if (skills.length === 0) throw new Error('Falta --skills (o --auto, si el texto de --task no sugiere ninguna)');
+  if (!args.task) throw new Error('Falta --task');
+  const sections = skills.map(name => `### Skill: ${name}\n${loadSkill(name, args.maxChars, dir)}`);
+  return [
+    'Sigue ~/.ecc-shared/ECC.md (ECC): plan, TDD, review, seguridad.',
+    '',
+    `ECC_REQUIRED_SKILLS: ${skills.join(',')}`,
+    '',
+    '## Skills obligatorias (ya incluidas; no hace falta buscarlas)',
+    sections.join('\n\n'),
+    '',
+    '## Tarea',
+    args.task,
+    '',
+    '## Cierre obligatorio',
+    `Antes de terminar, incluye una línea: "ECC-SKILLS-APPLIED: ${skills.join(',')} — <una frase de evidencia por skill>".`
+  ].join('\n');
+}
+
+function main() {
+  try {
+    process.stdout.write(`${buildSpec(parseArgs(process.argv.slice(2)))}\n`);
+  } catch (error) {
+    process.stderr.write(`ecc-spec: ${error.message}\n`);
+    process.exitCode = 1;
+  }
+}
+
+if (require.main === module) main();
+
+module.exports = { buildSpec, loadSkill, parseArgs, stripFrontmatter, resolveAutoSkills };

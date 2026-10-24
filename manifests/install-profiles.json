@@ -105,7 +105,9 @@
         "documentation-context",
         "hermes-hooks",
         "documentation-change-impact",
-        "documentation-test-regression"
+        "documentation-test-regression",
+        "personal-engineering",
+        "personal-video"
       ]
     }
   }

@@ -68,9 +68,12 @@ __pycache__/
 # Task files (Claude Code teams)
 tasks/
 
-# Personal configs (if any)
-personal/
-private/
+# Personal configs (if any) — NOTE: this fork intentionally tracks a
+# top-level personal/ directory (and scripts/personal/, hooks/personal/,
+# tests/personal/) for its own customization layer, so this must not be a
+# bare `personal/` (git ignores that at every depth, which silently
+# swallowed those directories once before — see git history).
+/private/
 
 # Session templates (not committed)
 examples/sessions/*.tmp

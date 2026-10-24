@@ -1,0 +1,97 @@
+{
+  "sources": [
+    {
+      "origin": "mattpocock",
+      "repo": "mattpocock/skills",
+      "sha": "5beb35b040e3de97e54fa9e386d7e42d15c295c2",
+      "license": "MIT",
+      "url": "https://github.com/mattpocock/skills",
+      "skills": [
+        { "from": "skills/engineering/codebase-design", "to": "codebase-design" },
+        { "from": "skills/engineering/diagnosing-bugs", "to": "diagnosing-bugs" },
+        { "from": "skills/engineering/domain-modeling", "to": "domain-modeling" },
+        { "from": "skills/engineering/grill-with-docs", "to": "grill-with-docs" },
+        { "from": "skills/engineering/implement-spec", "to": "implement-spec" },
+        { "from": "skills/engineering/implement", "to": "implement" },
+        { "from": "skills/engineering/improve-codebase-architecture", "to": "improve-codebase-architecture" },
+        { "from": "skills/engineering/prototype", "to": "prototype" },
+        { "from": "skills/engineering/research", "to": "research" },
+        { "from": "skills/engineering/retro", "to": "retro" },
+        { "from": "skills/engineering/to-spec", "to": "to-spec" },
+        { "from": "skills/engineering/to-tickets", "to": "to-tickets" },
+        { "from": "skills/engineering/triage", "to": "triage" },
+        { "from": "skills/engineering/wayfinder", "to": "wayfinder" },
+        { "from": "skills/engineering/wizard", "to": "wizard" },
+        { "from": "skills/productivity/grill-me", "to": "grill-me" },
+        { "from": "skills/productivity/grilling", "to": "grilling" },
+        { "from": "skills/productivity/handoff", "to": "handoff" },
+        { "from": "skills/productivity/teach", "to": "teach" },
+        { "from": "skills/productivity/to-questionnaire", "to": "to-questionnaire" },
+        { "from": "skills/productivity/wait-what", "to": "wait-what" },
+        { "from": "skills/productivity/writing-for-agents", "to": "writing-for-agents" }
+      ],
+      "excluded": [
+        "skills/engineering/ask-matt (router over his own repo, not useful standalone)",
+        "skills/engineering/setup-matt-pocock-skills (bootstraps his issue-tracker conventions)",
+        "skills/engineering/tdd (duplicate of ECC tdd-workflow)",
+        "skills/engineering/code-review (duplicate of ECC code-reviewer agent)",
+        "skills/engineering/pr (duplicate of ECC git workflow)",
+        "skills/in-progress/* (marked unfinished upstream)",
+        "skills/misc/* (repo-specific tooling, not portable)"
+      ]
+    },
+    {
+      "origin": "obra-superpowers",
+      "repo": "obra/superpowers",
+      "sha": "2ce8aa15d05bd57213e6f746f953aafb7ded7a8b",
+      "license": "MIT",
+      "url": "https://github.com/obra/superpowers",
+      "skills": [
+        { "from": "skills/brainstorming", "to": "brainstorming" },
+        { "from": "skills/diagnosing-superpowers", "to": "diagnosing-superpowers" },
+        { "from": "skills/dispatching-parallel-agents", "to": "dispatching-parallel-agents" },
+        { "from": "skills/executing-plans", "to": "executing-plans" },
+        { "from": "skills/finishing-a-development-branch", "to": "finishing-a-development-branch" },
+        { "from": "skills/receiving-code-review", "to": "receiving-code-review" },
+        { "from": "skills/requesting-code-review", "to": "requesting-code-review" },
+        { "from": "skills/subagent-driven-development", "to": "subagent-driven-development" },
+        { "from": "skills/systematic-debugging", "to": "systematic-debugging" },
+        { "from": "skills/using-git-worktrees", "to": "using-git-worktrees" },
+        { "from": "skills/writing-plans", "to": "writing-plans" },
+        { "from": "skills/writing-skills", "to": "writing-skills" }
+      ],
+      "excluded": [
+        "skills/test-driven-development (duplicate of ECC tdd-workflow)",
+        "skills/verification-before-completion (duplicate of ECC verification-loop)",
+        "skills/using-superpowers (SessionStart auto-injection; replaced by hooks/personal/ecc-skill-router.js)"
+      ],
+      "notes": "subagent-driven-development pushes continuous unattended execution of a task plan (do not pause to check in). Kept for Claude-native Task-tool subagents, but it can read as license to skip the confirm-before-risky-action policy — ECC.md's global rules still apply on top of it."
+    },
+    {
+      "origin": "hyperframes",
+      "repo": "heygen-com/hyperframes",
+      "sha": "19374955c7bc88735a0ae6a0aea63c213a31505d",
+      "license": "Apache-2.0",
+      "url": "https://github.com/heygen-com/hyperframes",
+      "skills": [
+        { "from": "skills/hyperframes", "to": "hyperframes" },
+        { "from": "skills/hyperframes-cli", "to": "hyperframes-cli" },
+        { "from": "skills/hyperframes-registry", "to": "hyperframes-registry" },
+        { "from": "skills/media-use", "to": "media-use" },
+        { "from": "skills/remotion-to-hyperframes", "to": "remotion-to-hyperframes" },
+        { "from": "skills/slideshow", "to": "slideshow" },
+        { "from": "skills/figma", "to": "figma" },
+        { "from": ".claude/skills/motion-doctrine", "to": "motion-doctrine" },
+        { "from": ".claude/skills/captions-overlay", "to": "captions-overlay" },
+        { "from": ".claude/skills/cut-the-curve", "to": "cut-the-curve" },
+        { "from": ".claude/skills/seam-craft", "to": "seam-craft" },
+        { "from": ".claude/skills/oversized-cursor", "to": "oversized-cursor" },
+        { "from": ".claude/skills/changelog-video", "to": "changelog-video" }
+      ],
+      "excluded": [
+        "registry/blocks/* (ready-made visual templates/compositions, not workflow skills — import later on request)"
+      ],
+      "notes": "Runs `npx hyperframes <command>`, which downloads and executes an npm package. Reviewed scripts/references before enabling; treated as a heavy module (pw-video) so it is opt-in per agent."
+    }
+  ]
+}
