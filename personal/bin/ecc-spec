@@ -16,6 +16,7 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const { loadTriggers, matchSkills } = require('../../scripts/lib/skill-router');
+const { buildPlan, toWaves } = require('../../scripts/lib/personal-presets');
 
 const SKILLS_DIR = process.env.ECC_SKILLS_DIR || path.join(os.homedir(), '.ecc-shared', 'repo', 'skills');
 const TRIGGERS_PATH = process.env.ECC_TRIGGERS_FILE || path.join(__dirname, '..', '..', 'config', 'skill-triggers.json');
@@ -23,11 +24,16 @@ const DEFAULT_MAX_CHARS = 9000;
 const AUTO_MAX_SKILLS = 3;
 
 function parseArgs(argv) {
-  const args = { skills: [], task: '', maxChars: DEFAULT_MAX_CHARS, auto: false };
+  const args = { skills: [], task: '', maxChars: DEFAULT_MAX_CHARS, auto: false, preset: '', stage: '', plan: false, lang: '', context: '' };
   for (let i = 0; i < argv.length; i++) {
     const flag = argv[i];
     if (flag === '--skills') args.skills = String(argv[++i] || '').split(',').map(s => s.trim()).filter(Boolean);
     else if (flag === '--task') args.task = String(argv[++i] || '');
+    else if (flag === '--preset') args.preset = String(argv[++i] || '');
+    else if (flag === '--stage') args.stage = String(argv[++i] || '');
+    else if (flag === '--lang') args.lang = String(argv[++i] || '');
+    else if (flag === '--context') args.context = String(argv[++i] || '');
+    else if (flag === '--plan') args.plan = true;
     else if (flag === '--max-chars') args.maxChars = Number(argv[++i]) || DEFAULT_MAX_CHARS;
     else if (flag === '--full') args.maxChars = Infinity;
     else if (flag === '--auto') args.auto = true;
@@ -82,7 +88,44 @@ function resolveAutoSkills(args, triggersPath = TRIGGERS_PATH) {
   return [...new Set([...args.skills, ...matches])];
 }
 
-function buildSpec(args, dir = SKILLS_DIR, triggersPath = TRIGGERS_PATH) {
+const PRESETS_PATH = process.env.ECC_PRESETS_FILE || path.join(__dirname, '..', 'orchestration-presets.json');
+
+function loadPresets(presetsPath = PRESETS_PATH) {
+  return JSON.parse(fs.readFileSync(presetsPath, 'utf8'));
+}
+
+// Turns `--preset P --stage S` into explicit skills plus stage notes, so the
+// rest of buildSpec stays the same.
+function applyStage(args, presetsPath = PRESETS_PATH) {
+  if (!args.preset || !args.stage) return args;
+  const data = loadPresets(presetsPath);
+  const plan = buildPlan(data, args.preset, { lang: args.lang });
+  const stage = plan.stages.find(candidate => candidate.id === args.stage);
+  if (!stage) throw new Error(`Etapa desconocida: ${args.stage} (disponibles: ${plan.stages.map(s => s.id).join(', ')})`);
+  const notes = [];
+  if (stage.readOnly) notes.push('Etapa de solo lectura: NO edites archivos; reporta hallazgos y propuestas.');
+  if (stage.exclusive) notes.push('Etapa exclusiva: se ejecuta sola porque es pesada para la máquina.');
+  return { ...args, skills: [...new Set([...args.skills, ...stage.skills])], notes };
+}
+
+// Stage commands the Orca coordinator can run, in launch order (waves).
+function planWithCommands(args, presetsPath = PRESETS_PATH) {
+  const plan = buildPlan(loadPresets(presetsPath), args.preset, { lang: args.lang });
+  const langFlag = args.lang ? ` --lang ${args.lang}` : '';
+  return {
+    ...plan,
+    waves: toWaves(plan),
+    stages: plan.stages.map(stage => ({
+      ...stage,
+      command:
+        `orca-ide orchestration worker-start --run <RUN_ID> --agent ${stage.agent} --worktree ${stage.worktree} --json ` +
+        `--spec "$(~/.ecc-shared/bin/ecc-spec --preset ${args.preset} --stage ${stage.id}${langFlag} --task '<TAREA>' [--context '<resumen de etapas previas>'])"`
+    }))
+  };
+}
+
+function buildSpec(rawArgs, dir = SKILLS_DIR, triggersPath = TRIGGERS_PATH, presetsPath = PRESETS_PATH) {
+  const args = applyStage(rawArgs, presetsPath);
   const skills = resolveAutoSkills(args, triggersPath);
   if (skills.length === 0) throw new Error('Falta --skills (o --auto, si el texto de --task no sugiere ninguna)');
   if (!args.task) throw new Error('Falta --task');
@@ -98,7 +141,9 @@ function buildSpec(args, dir = SKILLS_DIR, triggersPath = TRIGGERS_PATH) {
     sections.join('\n\n'),
     '',
     '## Tarea',
+    ...(args.notes || []),
     args.task,
+    ...(args.context ? ['', '## Contexto de etapas previas', args.context] : []),
     '',
     '## Cierre obligatorio',
     `Antes de terminar, incluye una línea: "ECC-SKILLS-APPLIED: ${skills.join(',')} — <una frase de evidencia por skill>".`
@@ -107,7 +152,12 @@ function buildSpec(args, dir = SKILLS_DIR, triggersPath = TRIGGERS_PATH) {
 
 function main() {
   try {
-    process.stdout.write(`${buildSpec(parseArgs(process.argv.slice(2)))}\n`);
+    const args = parseArgs(process.argv.slice(2));
+    if (args.preset && args.plan) {
+      process.stdout.write(`${JSON.stringify(planWithCommands(args), null, 2)}\n`);
+      return;
+    }
+    process.stdout.write(`${buildSpec(args)}\n`);
   } catch (error) {
     process.stderr.write(`ecc-spec: ${error.message}\n`);
     process.exitCode = 1;
@@ -116,4 +166,14 @@ function main() {
 
 if (require.main === module) main();
 
-module.exports = { buildSpec, loadSkill, parseArgs, stripFrontmatter, resolveAutoSkills, describeSkillDir, resolvePluginRoot };
+module.exports = {
+  buildSpec,
+  loadSkill,
+  parseArgs,
+  stripFrontmatter,
+  resolveAutoSkills,
+  describeSkillDir,
+  resolvePluginRoot,
+  applyStage,
+  planWithCommands
+};

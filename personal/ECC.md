@@ -42,6 +42,11 @@ menciona un bug/falla -> `diagnosing-bugs`/`systematic-debugging`; una idea o fe
   `~/.ecc-shared/bin/ecc-spec --auto --task "..."` para que elija las skills solo a partir del texto de la
   tarea usando `config/skill-triggers.json` (añade el preámbulo ECC, la línea `ECC_REQUIRED_SKILLS:`, el
   texto de cada skill y el contrato de cierre). Un hook deniega `worker-start` sin esa asignación.
+- Para trabajo repetible usa **presets** por tipo de tarea: `~/.ecc-shared/bin/ecc-spec --preset <feature|bug|ui|video|research|content> --plan [--lang django|fastapi|react|next|ts|go|rust|python]`
+  imprime etapas, agentes, worktrees y olas de lanzamiento; cada etapa se lanza con
+  `--spec "$(~/.ecc-shared/bin/ecc-spec --preset <p> --stage <etapa> --task '...' --context '<resumen previo>')"`.
+  El procedimiento completo de coordinador (Orca: `orca-ide`, nunca `orca`; esperar con `check --wait`; aceptar, revisar,
+  liberar) está en la skill `ecc-orchestrator`. Máximo 2 workers en paralelo y los vídeos siempre solos.
 - Al terminar, el worker incluye `ECC-SKILLS-APPLIED: a,b — evidencia`; un hook Stop se lo exige. El orquestador
   comprueba esa línea con `worker-read` antes de aceptar el `worker_done`; si falta, re-engancha al worker.
 - Delega por especialidad: planner (planificar), tdd-guide (tests), code-reviewer (tras cambios),

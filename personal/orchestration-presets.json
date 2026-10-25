@@ -1,0 +1,59 @@
+{
+  "_comment": "Recipes for the Orca orchestrator, read by personal/bin/ecc-spec (--preset). A stage is one supervised worker: agent, worktree, skills (a {lang} token expands to langSkills[--lang]), deps (stages that must settle first), readOnly (no edits expected) and exclusive (runs alone, e.g. heavy video renders). Models and effort are deliberately not set: Orca says to pass --model only when the user named one.",
+  "maxParallel": 2,
+  "langSkills": {
+    "python": ["python-patterns", "python-testing"],
+    "django": ["django-patterns", "django-security", "python-testing"],
+    "fastapi": ["fastapi-patterns", "python-patterns", "python-testing"],
+    "react": ["react-patterns", "frontend-patterns", "react-testing"],
+    "next": ["nextjs-turbopack", "react-patterns", "frontend-patterns"],
+    "ts": ["frontend-patterns", "backend-patterns"],
+    "go": ["golang-patterns", "golang-testing"],
+    "rust": ["rust-patterns", "rust-testing"]
+  },
+  "presets": {
+    "feature": {
+      "description": "New feature: brainstorm and plan, implement test-first, independent review, final verification.",
+      "stages": [
+        { "id": "plan", "agent": "claude", "worktree": "current", "skills": ["brainstorming", "writing-plans"], "deps": [], "readOnly": true },
+        { "id": "implement", "agent": "claude", "worktree": "new-child", "skills": ["tdd-workflow", "{lang}"], "deps": ["plan"] },
+        { "id": "review", "agent": "claude", "worktree": "current", "skills": ["requesting-code-review", "security-review"], "deps": ["implement"], "readOnly": true },
+        { "id": "verify", "agent": "claude", "worktree": "current", "skills": ["verification-loop"], "deps": ["review"], "readOnly": true }
+      ]
+    },
+    "bug": {
+      "description": "Bug: diagnose with a reproduction, fix test-first, review.",
+      "stages": [
+        { "id": "diagnose", "agent": "claude", "worktree": "current", "skills": ["diagnosing-bugs", "systematic-debugging"], "deps": [], "readOnly": true },
+        { "id": "fix", "agent": "claude", "worktree": "new-child", "skills": ["tdd-workflow", "{lang}"], "deps": ["diagnose"] },
+        { "id": "review", "agent": "claude", "worktree": "current", "skills": ["requesting-code-review", "verification-loop"], "deps": ["fix"], "readOnly": true }
+      ]
+    },
+    "ui": {
+      "description": "Interface: design direction and tokens, implementation, accessibility and code review.",
+      "stages": [
+        { "id": "design", "agent": "claude", "worktree": "current", "skills": ["ui-ux-pro-max", "frontend-design-direction"], "deps": [], "readOnly": true },
+        { "id": "implement", "agent": "claude", "worktree": "new-child", "skills": ["ui-styling", "frontend-patterns", "{lang}"], "deps": ["design"] },
+        { "id": "review", "agent": "claude", "worktree": "current", "skills": ["accessibility", "requesting-code-review"], "deps": ["implement"], "readOnly": true }
+      ]
+    },
+    "video": {
+      "description": "Video: one isolated, exclusive worker (renders are heavy on the machine).",
+      "stages": [
+        { "id": "make", "agent": "claude", "worktree": "new-child", "skills": ["hyperframes", "media-use"], "deps": [], "exclusive": true }
+      ]
+    },
+    "research": {
+      "description": "Research and current documentation, no edits.",
+      "stages": [
+        { "id": "research", "agent": "claude", "worktree": "current", "skills": ["deep-research", "documentation-lookup"], "deps": [], "readOnly": true }
+      ]
+    },
+    "content": {
+      "description": "Article or content piece with SEO pass.",
+      "stages": [
+        { "id": "write", "agent": "claude", "worktree": "current", "skills": ["article-writing", "seo"], "deps": [] }
+      ]
+    }
+  }
+}

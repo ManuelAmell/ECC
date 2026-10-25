@@ -1,12 +1,153 @@
 {
-  "video": { "description": "Make, edit and render video", "skills": ["hyperframes", "remotion-video-creation", "manim-video", "video-editing", "videodb", "ui-demo", "tasteforge-video", "captions-overlay", "changelog-video", "media-use"] },
-  "media-ai": { "description": "AI image, audio and media generation", "skills": ["fal-ai-media", "media-use"] },
-  "design-ui-ux": { "description": "Interface design, design systems, brand, motion, accessibility", "skills": ["ui-ux-pro-max", "ui-styling", "design", "design-system", "uxpm-design-system", "brand", "frontend-design-direction", "liquid-glass-design", "make-interfaces-feel-better", "motion-foundations", "motion-patterns", "motion-advanced", "accessibility", "frontend-a11y"] },
-  "presentations": { "description": "Slides, decks and banners", "skills": ["slides", "frontend-slides", "slideshow", "banner-design"] },
-  "documents": { "description": "PDF, Word, Excel and technical documents", "skills": ["nutrient-document-processing", "architecture-decision-records", "api-design"] },
-  "research": { "description": "Research and up-to-date documentation", "skills": ["deep-research", "market-research", "exa-search", "research-ops", "documentation-lookup", "research"] },
-  "content-seo": { "description": "Writing, content, brand voice, SEO", "skills": ["article-writing", "content-engine", "crosspost", "brand-voice", "social-publisher", "seo"] },
-  "engineering-flow": { "description": "Plan, debug, test, review, ship", "skills": ["brainstorming", "writing-plans", "executing-plans", "diagnosing-bugs", "systematic-debugging", "tdd-workflow", "security-review", "verification-loop", "requesting-code-review", "receiving-code-review", "finishing-a-development-branch", "git-workflow", "github-ops", "codebase-onboarding"] },
-  "stacks": { "description": "The user's languages and frameworks", "skills": ["react-patterns", "react-testing", "frontend-patterns", "nextjs-turbopack", "python-patterns", "python-testing", "django-patterns", "django-security", "fastapi-patterns", "golang-patterns", "golang-testing", "rust-patterns", "rust-testing", "backend-patterns", "database-migrations", "postgres-patterns", "e2e-testing", "docker-patterns", "deployment-patterns", "kubernetes-patterns", "redis-patterns", "prisma-patterns", "nestjs-patterns", "vite-patterns", "error-handling", "coding-standards"] },
-  "meta": { "description": "Find, create, measure and audit skills; manage context", "skills": ["skill-scout", "continuous-learning-v2", "skill-comply", "skill-stocktake", "strategic-compact", "context-budget", "token-budget-advisor"] }
+  "video": {
+    "description": "Make, edit and render video",
+    "skills": [
+      "hyperframes",
+      "remotion-video-creation",
+      "manim-video",
+      "video-editing",
+      "videodb",
+      "ui-demo",
+      "tasteforge-video",
+      "captions-overlay",
+      "changelog-video",
+      "media-use"
+    ]
+  },
+  "media-ai": {
+    "description": "AI image, audio and media generation",
+    "skills": [
+      "fal-ai-media",
+      "media-use"
+    ]
+  },
+  "design-ui-ux": {
+    "description": "Interface design, design systems, brand, motion, accessibility",
+    "skills": [
+      "ui-ux-pro-max",
+      "ui-styling",
+      "design",
+      "design-system",
+      "uxpm-design-system",
+      "brand",
+      "frontend-design-direction",
+      "liquid-glass-design",
+      "make-interfaces-feel-better",
+      "motion-foundations",
+      "motion-patterns",
+      "motion-advanced",
+      "accessibility",
+      "frontend-a11y"
+    ]
+  },
+  "presentations": {
+    "description": "Slides, decks and banners",
+    "skills": [
+      "slides",
+      "frontend-slides",
+      "slideshow",
+      "banner-design"
+    ]
+  },
+  "documents": {
+    "description": "PDF, Word, Excel and technical documents",
+    "skills": [
+      "nutrient-document-processing",
+      "architecture-decision-records",
+      "api-design"
+    ]
+  },
+  "research": {
+    "description": "Research and up-to-date documentation",
+    "skills": [
+      "deep-research",
+      "market-research",
+      "exa-search",
+      "research-ops",
+      "documentation-lookup",
+      "research"
+    ]
+  },
+  "content-seo": {
+    "description": "Writing, content, brand voice, SEO",
+    "skills": [
+      "article-writing",
+      "content-engine",
+      "crosspost",
+      "brand-voice",
+      "social-publisher",
+      "seo"
+    ]
+  },
+  "engineering-flow": {
+    "description": "Plan, debug, test, review, ship",
+    "skills": [
+      "brainstorming",
+      "writing-plans",
+      "executing-plans",
+      "diagnosing-bugs",
+      "systematic-debugging",
+      "tdd-workflow",
+      "security-review",
+      "verification-loop",
+      "requesting-code-review",
+      "receiving-code-review",
+      "finishing-a-development-branch",
+      "git-workflow",
+      "github-ops",
+      "codebase-onboarding"
+    ]
+  },
+  "stacks": {
+    "description": "The user's languages and frameworks",
+    "skills": [
+      "react-patterns",
+      "react-testing",
+      "frontend-patterns",
+      "nextjs-turbopack",
+      "python-patterns",
+      "python-testing",
+      "django-patterns",
+      "django-security",
+      "fastapi-patterns",
+      "golang-patterns",
+      "golang-testing",
+      "rust-patterns",
+      "rust-testing",
+      "backend-patterns",
+      "database-migrations",
+      "postgres-patterns",
+      "e2e-testing",
+      "docker-patterns",
+      "deployment-patterns",
+      "kubernetes-patterns",
+      "redis-patterns",
+      "prisma-patterns",
+      "nestjs-patterns",
+      "vite-patterns",
+      "error-handling",
+      "coding-standards"
+    ]
+  },
+  "meta": {
+    "description": "Find, create, measure and audit skills; manage context",
+    "skills": [
+      "skill-scout",
+      "continuous-learning-v2",
+      "skill-comply",
+      "skill-stocktake",
+      "strategic-compact",
+      "context-budget",
+      "token-budget-advisor"
+    ]
+  },
+  "orchestration": {
+    "description": "Orchestrating work across Orca workers",
+    "skills": [
+      "ecc-orchestrator",
+      "dispatching-parallel-agents",
+      "subagent-driven-development",
+      "handoff"
+    ]
+  }
 }

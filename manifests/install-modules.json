@@ -1605,6 +1605,32 @@
       "defaultInstall": false,
       "cost": "medium",
       "stability": "beta"
+    },
+    {
+      "id": "personal-orchestration",
+      "kind": "skills",
+      "description": "ECC orchestrator playbook for Orca: stage presets, skill injection, acceptance and cleanup rules (authored in this fork).",
+      "paths": [
+        "skills/ecc-orchestrator"
+      ],
+      "targets": [
+        "claude",
+        "claude-project",
+        "cursor",
+        "codex",
+        "copilot",
+        "opencode",
+        "codebuddy",
+        "joycode",
+        "qwen",
+        "zed"
+      ],
+      "dependencies": [
+        "platform-configs"
+      ],
+      "defaultInstall": false,
+      "cost": "light",
+      "stability": "beta"
     }
   ]
 }

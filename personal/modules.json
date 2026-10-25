@@ -13,5 +13,13 @@
     "description": "UI/UX Pro Max design intelligence: searchable styles, palettes, font pairings and UX guidelines, plus tailwind/shadcn styling, logo/icon/brand/slides helpers (nextlevelbuilder/ui-ux-pro-max-skill, MIT). Image-generation helpers need the user's own API keys.",
     "cost": "medium",
     "stability": "beta"
+  },
+  "personal-orchestration": {
+    "description": "ECC orchestrator playbook for Orca: stage presets, skill injection, acceptance and cleanup rules (authored in this fork).",
+    "cost": "light",
+    "stability": "beta",
+    "ownPaths": [
+      "skills/ecc-orchestrator"
+    ]
   }
 }

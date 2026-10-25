@@ -108,7 +108,8 @@
         "documentation-test-regression",
         "personal-engineering",
         "personal-video",
-        "personal-design"
+        "personal-design",
+        "personal-orchestration"
       ]
     }
   }

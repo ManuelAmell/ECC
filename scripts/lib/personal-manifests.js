@@ -5,7 +5,8 @@
 // installer (validate-install-manifests fails on unreferenced skills).
 //
 // Each source names the install module that ships it (`module`); module
-// definitions (description, cost, stability) live in `personal/modules.json`.
+// definitions (description, cost, stability) live in `personal/modules.json`;
+// `ownPaths` lists skills authored in this fork rather than imported.
 
 const TARGETS = ['claude', 'claude-project', 'cursor', 'codex', 'copilot', 'opencode', 'codebuddy', 'joycode', 'qwen', 'zed'];
 
@@ -19,7 +20,7 @@ function modulePaths(sources, moduleId) {
 function syncModules(modulesManifest, profilesManifest, sources, definitions) {
   const modules = modulesManifest.modules;
   for (const [id, definition] of Object.entries(definitions)) {
-    const paths = modulePaths(sources, id);
+    const paths = [...new Set([...modulePaths(sources, id), ...(definition.ownPaths || [])])].sort();
     const next = {
       id,
       kind: 'skills',
