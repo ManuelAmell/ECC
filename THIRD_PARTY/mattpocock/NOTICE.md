@@ -1,6 +1,6 @@
 # mattpocock
 
-Source: https://github.com/mattpocock/skills
+Source: <https://github.com/mattpocock/skills>
 Commit: 5beb35b040e3de97e54fa9e386d7e42d15c295c2
 License: MIT
 

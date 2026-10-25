@@ -1,6 +1,6 @@
 # hyperframes
 
-Source: https://github.com/heygen-com/hyperframes
+Source: <https://github.com/heygen-com/hyperframes>
 Commit: 19374955c7bc88735a0ae6a0aea63c213a31505d
 License: Apache-2.0
 

@@ -154,7 +154,7 @@ function writeThirdPartyNotice(thirdPartyDir, source, cloneDir) {
     [
       `# ${source.origin}`,
       '',
-      `Source: ${source.url}`,
+      `Source: <${source.url}>`,
       `Commit: ${source.sha}`,
       `License: ${source.license}`,
       '',

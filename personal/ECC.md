@@ -3,8 +3,8 @@
 Este archivo lo cargan Claude Code, OpenCode, Antigravity (`agy`) y Command Code (`cmdc`).
 Aplica en TODOS los proyectos, tanto si eres el agente principal como si eres un sub-agente
 lanzado por un orquestador (Orca u otro). Repo ECC: `~/.ecc-shared/repo` (skills en `repo/skills`,
-agentes en `repo/agents`, reglas en `repo/rules`). Fork personal: https://github.com/ManuelAmell/ECC
-(rama `personal`), con `upstream` = https://github.com/affaan-m/ECC.
+agentes en `repo/agents`, reglas en `repo/rules`). Fork personal: <https://github.com/ManuelAmell/ECC>
+(rama `personal`), con `upstream` = <https://github.com/affaan-m/ECC>.
 
 Las instrucciones del proyecto (AGENTS.md / CLAUDE.md locales) tienen prioridad en caso de conflicto.
 
@@ -54,6 +54,7 @@ menciona un bug/falla -> `diagnosing-bugs`/`systematic-debugging`; una idea o fe
 - Ejecuta en paralelo las tareas independientes; no cierres una tarea sin review y verificación.
 
 ### Enrutado de skills (tarea -> skills -> reviewer)
+
 | Tarea | Skills | Reviewer |
 |---|---|---|
 | Idea o feature nueva (antes de planear) | `brainstorming`, `grill-me` | — |
@@ -82,7 +83,7 @@ menciona un bug/falla -> `diagnosing-bugs`/`systematic-debugging`; una idea o fe
 | Antes de cerrar cualquier tarea | `verification-loop`, `security-review` si toca input/auth/datos | — |
 
 Máximo 2-3 skills por worker; las skills largas se recortan, el texto completo está en `~/.ecc-shared/repo/skills/<nombre>/SKILL.md`.
-Lista completa de las skills de terceros importadas y por qué: `~/.ecc-shared/repo/THIRD_PARTY/*/NOTICE.md`.
+Lista completa de las skills de terceros importadas y por qué: `~/.ecc-shared/repo/THIRD_PARTY/*/NOTICE.md`; la política (SHA fijados, atribución, revisión, cómo actualizar) está en `~/.ecc-shared/repo/THIRD_PARTY/POLICY.md`.
 Cobertura: `node ~/.ecc-shared/repo/scripts/personal/coverage-report.js --check` comprueba que cada skill importada y cada categoría de capacidades (vídeo, diseño, investigación, stacks...) existe y tiene disparador.
 Las skills con prefijo `mp-`/`sp-` son las de Pocock/superpowers que se solapan con ECC (p. ej. `mp-tdd` frente a `tdd-workflow`); usa la de ECC por defecto y la prefijada si el usuario la pide.
 
