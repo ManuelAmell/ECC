@@ -17,10 +17,10 @@ License: MIT
 - using-git-worktrees (from skills/using-git-worktrees)
 - writing-plans (from skills/writing-plans)
 - writing-skills (from skills/writing-skills)
+- sp-test-driven-development (from skills/test-driven-development)
+- sp-verification-before-completion (from skills/verification-before-completion)
 
 ## Not imported
-- skills/test-driven-development (duplicate of ECC tdd-workflow)
-- skills/verification-before-completion (duplicate of ECC verification-loop)
 - skills/using-superpowers (SessionStart auto-injection; replaced by hooks/personal/ecc-skill-router.js)
 
 ## Notes

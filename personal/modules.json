@@ -1,0 +1,17 @@
+{
+  "personal-engineering": {
+    "description": "Imported third-party workflow skills: debugging, planning, specs and tickets, code-review discipline, parallel-agent orchestration (Matt Pocock and obra/superpowers, MIT).",
+    "cost": "light",
+    "stability": "beta"
+  },
+  "personal-video": {
+    "description": "HyperFrames (HTML-to-video) skills and block templates: rendering, captions, motion doctrine, media generation via external APIs (heygen-com/hyperframes, Apache-2.0). Heavy, opt-in.",
+    "cost": "heavy",
+    "stability": "beta"
+  },
+  "personal-design": {
+    "description": "UI/UX Pro Max design intelligence: searchable styles, palettes, font pairings and UX guidelines, plus tailwind/shadcn styling, logo/icon/brand/slides helpers (nextlevelbuilder/ui-ux-pro-max-skill, MIT). Image-generation helpers need the user's own API keys.",
+    "cost": "medium",
+    "stability": "beta"
+  }
+}

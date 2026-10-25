@@ -36,7 +36,7 @@ function matchSkills(prompt, triggers, { max = MAX_SUGGESTIONS } = {}) {
   const matches = [];
   for (const entry of triggers) {
     const hit = entry.regexes.find(regex => regex.test(prompt));
-    if (hit) matches.push({ skill: entry.skill, mode: entry.mode, priority: entry.priority, matchedOn: hit.source });
+    if (hit) matches.push({ skill: entry.skill, kind: entry.kind || 'skill', mode: entry.mode, priority: entry.priority, matchedOn: hit.source });
   }
   matches.sort((a, b) => b.priority - a.priority);
   return matches.slice(0, max);
@@ -46,7 +46,8 @@ function formatSuggestion(matches) {
   if (matches.length === 0) return '';
   const lines = matches.map(match => {
     const tag = match.mode === 'require' ? ' (recomendada con fuerza)' : '';
-    return `- ${match.skill}${tag}`;
+    const name = match.kind === 'command' ? `/${match.skill} (comando)` : match.skill;
+    return `- ${name}${tag}`;
   });
   return [
     'ECC: skills sugeridas para este prompt (solo sugerencia; ninguna se cargó):',

@@ -27,12 +27,25 @@ License: MIT
 - to-questionnaire (from skills/productivity/to-questionnaire)
 - wait-what (from skills/productivity/wait-what)
 - writing-for-agents (from skills/productivity/writing-for-agents)
+- mp-tdd (from skills/engineering/tdd)
+- mp-code-review (from skills/engineering/code-review)
+- mp-pr (from skills/engineering/pr)
+- ask-matt (from skills/engineering/ask-matt)
+- setup-matt-pocock-skills (from skills/engineering/setup-matt-pocock-skills)
+- git-guardrails-claude-code (from skills/misc/git-guardrails-claude-code)
+- migrate-to-shoehorn (from skills/misc/migrate-to-shoehorn)
+- scaffold-exercises (from skills/misc/scaffold-exercises)
+- setup-pre-commit (from skills/misc/setup-pre-commit)
+- mp-chief-of-staff (from skills/in-progress/chief-of-staff)
+- claude-handoff (from skills/in-progress/claude-handoff)
+- loop-me (from skills/in-progress/loop-me)
+- setup-ts-deep-modules (from skills/in-progress/setup-ts-deep-modules)
+- writing-beats (from skills/in-progress/writing-beats)
+- writing-fragments (from skills/in-progress/writing-fragments)
+- writing-shape (from skills/in-progress/writing-shape)
 
 ## Not imported
-- skills/engineering/ask-matt (router over his own repo, not useful standalone)
-- skills/engineering/setup-matt-pocock-skills (bootstraps his issue-tracker conventions)
-- skills/engineering/tdd (duplicate of ECC tdd-workflow)
-- skills/engineering/code-review (duplicate of ECC code-reviewer agent)
-- skills/engineering/pr (duplicate of ECC git workflow)
-- skills/in-progress/* (marked unfinished upstream)
-- skills/misc/* (repo-specific tooling, not portable)
+(none)
+
+## Notes
+Overlaps with ECC (tdd, code-review, pr) are imported with an mp- prefix so each keeps a clear boundary (see docs/skill-adaptation-policy.md). skills/in-progress/* are marked stability: experimental upstream and here. setup-matt-pocock-skills is a prerequisite for to-tickets/triage (issue tracker + label vocabulary).

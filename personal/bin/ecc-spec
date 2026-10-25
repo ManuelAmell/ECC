@@ -40,11 +40,31 @@ function stripFrontmatter(text) {
   return text.replace(/^---\n[\s\S]*?\n---\n/, '');
 }
 
+const RESOURCE_DIRS = ['references', 'scripts', 'data', 'templates', 'assets', 'examples'];
+
+// Skills written for the Claude plugin run their helper scripts through
+// `${CLAUDE_PLUGIN_ROOT}/skills/<name>/...`. A worker outside the plugin has
+// no such variable, so the injected text points at the real skills dir.
+function resolvePluginRoot(text, dir) {
+  const shown = dir === SKILLS_DIR ? '~/.ecc-shared/repo/skills' : dir;
+  return text.split('${CLAUDE_PLUGIN_ROOT}/skills/').join(`${shown}/`);
+}
+
+function describeSkillDir(name, dir) {
+  const root = path.join(dir, name);
+  const parts = RESOURCE_DIRS.filter(sub => fs.existsSync(path.join(root, sub))).map(sub => {
+    const count = fs.readdirSync(path.join(root, sub), { recursive: true }).length;
+    return `${sub}/ (${count})`;
+  });
+  const shown = dir === SKILLS_DIR ? `~/.ecc-shared/repo/skills/${name}` : root;
+  return parts.length ? `Directorio: ${shown} — recursos: ${parts.join(', ')}` : `Directorio: ${shown}`;
+}
+
 function loadSkill(name, maxChars, dir = SKILLS_DIR) {
   if (!/^[A-Za-z0-9._-]+$/.test(name)) throw new Error(`Nombre de skill inválido: ${name}`);
   const file = path.join(dir, name, 'SKILL.md');
   if (!fs.existsSync(file)) throw new Error(`Skill no encontrada: ${name} (${file})`);
-  const body = stripFrontmatter(fs.readFileSync(file, 'utf8')).trim();
+  const body = resolvePluginRoot(stripFrontmatter(fs.readFileSync(file, 'utf8')).trim(), dir);
   if (body.length <= maxChars) return body;
   return `${body.slice(0, maxChars).trimEnd()}\n\n[... recortada; texto completo en ${file}]`;
 }
@@ -55,7 +75,10 @@ function resolveAutoSkills(args, triggersPath = TRIGGERS_PATH) {
   if (!args.auto) return args.skills;
   if (!args.task) throw new Error('--auto necesita --task para elegir skills');
   const triggers = loadTriggers(triggersPath);
-  const matches = matchSkills(args.task, triggers, { max: AUTO_MAX_SKILLS }).map(m => m.skill);
+  // Commands (kind: "command") have no SKILL.md to inject, so they are skipped here.
+  const matches = matchSkills(args.task, triggers, { max: AUTO_MAX_SKILLS })
+    .filter(m => m.kind !== 'command')
+    .map(m => m.skill);
   return [...new Set([...args.skills, ...matches])];
 }
 
@@ -63,7 +86,9 @@ function buildSpec(args, dir = SKILLS_DIR, triggersPath = TRIGGERS_PATH) {
   const skills = resolveAutoSkills(args, triggersPath);
   if (skills.length === 0) throw new Error('Falta --skills (o --auto, si el texto de --task no sugiere ninguna)');
   if (!args.task) throw new Error('Falta --task');
-  const sections = skills.map(name => `### Skill: ${name}\n${loadSkill(name, args.maxChars, dir)}`);
+  const sections = skills.map(
+    name => `### Skill: ${name}\n${describeSkillDir(name, dir)}\n\n${loadSkill(name, args.maxChars, dir)}`
+  );
   return [
     'Sigue ~/.ecc-shared/ECC.md (ECC): plan, TDD, review, seguridad.',
     '',
@@ -91,4 +116,4 @@ function main() {
 
 if (require.main === module) main();
 
-module.exports = { buildSpec, loadSkill, parseArgs, stripFrontmatter, resolveAutoSkills };
+module.exports = { buildSpec, loadSkill, parseArgs, stripFrontmatter, resolveAutoSkills, describeSkillDir, resolvePluginRoot };

@@ -64,11 +64,22 @@ menciona un bug/falla -> `diagnosing-bugs`/`systematic-debugging`; una idea o fe
 | BD / migraciones | `postgres-patterns`, `database-migrations` | `database-reviewer` |
 | E2E / Docker | `e2e-testing` / `docker-patterns` | `code-reviewer` |
 | Spec / tickets a partir de una idea | `to-spec`, `to-tickets`, `implement-spec` | — |
-| Vídeo / animación / render | `hyperframes`, `media-use` | — |
+| Vídeo / animación / render | `hyperframes`, `media-use` (+ `video-editing`, `remotion-video-creation`, `manim-video`) | — |
+| Diseño UI/UX, landing, paleta, tipografía | `ui-ux-pro-max`, `frontend-design-direction`, `accessibility` | — |
+| Tailwind / shadcn, tokens de diseño | `ui-styling`, `uxpm-design-system` | — |
+| Logo, iconos, marca, banners | `design`, `brand`, `banner-design` | — |
+| Presentaciones | `slides`, `frontend-slides` | — |
+| Imágenes / medios con IA | `fal-ai-media` | — |
+| Investigación / mercado / docs al día | `deep-research`, `market-research`, `documentation-lookup` | — |
+| PDF, Word, Excel | `nutrient-document-processing` | — |
+| SEO, artículos, contenido | `seo`, `article-writing`, `content-engine` | — |
+| Buscar o crear una skill | `skill-scout` primero; luego `writing-skills` o el comando `/skill-create` | — |
 | Antes de cerrar cualquier tarea | `verification-loop`, `security-review` si toca input/auth/datos | — |
 
 Máximo 2-3 skills por worker; las skills largas se recortan, el texto completo está en `~/.ecc-shared/repo/skills/<nombre>/SKILL.md`.
 Lista completa de las skills de terceros importadas y por qué: `~/.ecc-shared/repo/THIRD_PARTY/*/NOTICE.md`.
+Cobertura: `node ~/.ecc-shared/repo/scripts/personal/coverage-report.js --check` comprueba que cada skill importada y cada categoría de capacidades (vídeo, diseño, investigación, stacks...) existe y tiene disparador.
+Las skills con prefijo `mp-`/`sp-` son las de Pocock/superpowers que se solapan con ECC (p. ej. `mp-tdd` frente a `tdd-workflow`); usa la de ECC por defecto y la prefijada si el usuario la pide.
 
 ## Contexto
 Carga skills bajo demanda, no todas a la vez. Catálogo completo: `~/.ecc-shared/repo/AGENTS.md`.

@@ -128,3 +128,27 @@ test('ecc-spec --auto: throws when nothing matches and no --skills given', () =>
   const args = spec.parseArgs(['--auto', '--task', 'algo neutro']);
   assert.throws(() => spec.buildSpec(args, dir, triggersPath), /Falta --skills/);
 });
+
+test('ecc-spec: swaps ${CLAUDE_PLUGIN_ROOT}/skills/ for the real skills dir in injected text', () => {
+  const dir = tmpDir();
+  fs.mkdirSync(path.join(dir, 'ui'));
+  fs.writeFileSync(path.join(dir, 'ui', 'SKILL.md'), '---\nname: ui\n---\npython "${CLAUDE_PLUGIN_ROOT}/skills/ui/scripts/search.py" x');
+  const body = spec.loadSkill('ui', 1000, dir);
+  assert.ok(!body.includes('CLAUDE_PLUGIN_ROOT'));
+  assert.ok(body.includes(`${dir}/ui/scripts/search.py`));
+});
+
+test('ecc-spec: describes the skill directory and its auxiliary resources', () => {
+  const dir = tmpDir();
+  fs.mkdirSync(path.join(dir, 'ui', 'references'), { recursive: true });
+  fs.mkdirSync(path.join(dir, 'ui', 'scripts'));
+  fs.writeFileSync(path.join(dir, 'ui', 'references', 'a.md'), 'x');
+  fs.writeFileSync(path.join(dir, 'ui', 'scripts', 's.py'), 'x');
+  fs.writeFileSync(path.join(dir, 'ui', 'SKILL.md'), '---\nname: ui\n---\nbody');
+  const line = spec.describeSkillDir('ui', dir);
+  assert.match(line, /Directorio: .*\/ui/);
+  assert.match(line, /references\/ \(1\)/);
+  assert.match(line, /scripts\/ \(1\)/);
+  const out = spec.buildSpec({ skills: ['ui'], task: 't', maxChars: 1000, auto: false }, dir);
+  assert.match(out, /### Skill: ui\nDirectorio:/);
+});

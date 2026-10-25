@@ -34,7 +34,7 @@ Tiers, `dropped` and `unindexed`, stale indexes, offline behaviour: `references/
 | --- | --- |
 | Transitions | `beat-freeze-cut`, `chromatic-radial-split`, `cinematic-zoom` |
 | Overlays and lower thirds | `camcorder-hud`, `editorial-flash-overlay`, `lt-clean-bar` |
-| Title cards and kinetic type | `canopy-part-title`, `code-slice-hero` |
+| Title cards and kinetic type | `hf-canopy-part-title`, `hf-code-slice-hero` |
 | Social, chat and UI cards | `ai-chat-reveal`, `chatgpt-exchange` |
 | Code, charts, data and maps | `code-diff`, `bar-chart-race`, `data-chart` |
 | 3D, shader and backgrounds | `app-showcase`, `aurora`, `blob` |

@@ -18,9 +18,16 @@ License: Apache-2.0
 - seam-craft (from .claude/skills/seam-craft)
 - oversized-cursor (from .claude/skills/oversized-cursor)
 - changelog-video (from .claude/skills/changelog-video)
+- hf-canopy-part-title (from registry/blocks/canopy-part-title)
+- hf-code-slice-hero (from registry/blocks/code-slice-hero)
+- hf-cuboid-carousel (from registry/blocks/cuboid-carousel)
+- hf-frost-sequence-camera-orbit (from registry/blocks/frost-sequence-camera-orbit)
+- hf-glass-shard-title (from registry/blocks/glass-shard-title)
+- hf-orbit-card (from registry/blocks/orbit-card)
+- hf-wireframe-portal-title (from registry/blocks/wireframe-portal-title)
 
 ## Not imported
-- registry/blocks/* (ready-made visual templates/compositions, not workflow skills — import later on request)
+(none)
 
 ## Notes
 Runs `npx hyperframes <command>`, which downloads and executes an npm package. Reviewed scripts/references before enabling; treated as a heavy module (pw-video) so it is opt-in per agent.

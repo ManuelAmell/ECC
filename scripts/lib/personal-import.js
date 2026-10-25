@@ -38,12 +38,28 @@ function splitFrontmatter(text) {
 // track license via THIRD_PARTY/, not per-file) and append our own
 // `metadata:` block. Good enough for the simple `key: value` frontmatter
 // these sources use; anything structured is left untouched.
-function stampMetadata(skillMdPath, source) {
+//
+// `skill` is the source entry ({from, to, extra}). The frontmatter `name:` is
+// forced to `skill.to` so a renamed skill keeps its name and directory in
+// sync (validate-skills and the host both key on that), and `skill.extra`
+// (e.g. {stability: "experimental"}) is stamped alongside the origin keys.
+function stampMetadata(skillMdPath, source, skill = {}) {
   const raw = fs.readFileSync(skillMdPath, 'utf8');
   const { frontmatter, body } = splitFrontmatter(raw);
   if (!frontmatter) return;
-  const ours = [`  origin: ${source.origin}`, `  upstream: ${source.url}`, `  upstreamSha: ${source.sha}`, `  license: ${source.license}`];
+  const ours = [
+    `  origin: ${source.origin}`,
+    `  upstream: ${source.url}`,
+    `  upstreamSha: ${source.sha}`,
+    `  license: ${source.license}`,
+    ...Object.entries(skill.extra || {}).map(([key, value]) => `  ${key}: ${value}`)
+  ];
   const lines = frontmatter.split('\n').filter(line => !/^license:/i.test(line));
+  if (skill.to) {
+    const nameIndex = lines.findIndex(line => /^name:/.test(line));
+    if (nameIndex === -1) lines.unshift(`name: ${skill.to}`);
+    else lines[nameIndex] = `name: ${skill.to}`;
+  }
 
   // The upstream skill may already declare its own top-level `metadata:`
   // block (e.g. hyperframes' `internal: true`). YAML forbids a duplicate
@@ -68,9 +84,13 @@ function renameMap(skills) {
   return map;
 }
 
-// Rewrite exact-word references to a renamed skill (e.g. the Skill tool
-// call `"grilling"`) across every file copied from this source. Scoped to
-// the skills just imported from this source, never the wider repo.
+const escapeRegExp = text => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+// Rewrite *skill-reference-shaped* mentions of a renamed skill — `name`,
+// "name", 'name' or /name — across every file copied from this source,
+// never bare prose. A bare-word rewrite would turn "open a pr" into "open a
+// mp-pr" the moment a skill called `pr` is renamed. Scoped to the skills
+// just imported from this source, never the wider repo.
 function rewriteRenames(skillsDir, skills) {
   const renames = renameMap(skills);
   if (renames.size === 0) return;
@@ -81,9 +101,31 @@ function rewriteRenames(skillsDir, skills) {
       let text = fs.readFileSync(file, 'utf8');
       let changed = false;
       for (const [from, to] of renames) {
-        const pattern = new RegExp(`\\b${from.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'g');
+        const pattern = new RegExp(`([\`"'/])${escapeRegExp(from)}(?=[\`"'\\s.,:;)\\]]|$)`, 'g');
         if (pattern.test(text)) {
-          text = text.replace(pattern, to);
+          text = text.replace(pattern, `$1${to}`);
+          changed = true;
+        }
+      }
+      if (changed) fs.writeFileSync(file, text);
+    });
+  }
+}
+
+// Literal path/text rewrites from the source entry's `rewrites` list
+// ({from, to}), applied to every text file of the skills imported from it.
+// Used for hard-coded install paths such as `.claude/skills/<skill>/...`
+// that would not resolve once the skill lives in this fork.
+function applyLiteralRewrites(skillsDir, skills, rewrites = []) {
+  if (rewrites.length === 0) return;
+  for (const skill of skills) {
+    walk(path.join(skillsDir, skill.to), file => {
+      if (!/\.(md|mdx|json|js|mjs|ts|py|sh|txt|ya?ml)$/.test(file)) return;
+      let text = fs.readFileSync(file, 'utf8');
+      let changed = false;
+      for (const { from, to } of rewrites) {
+        if (text.includes(from)) {
+          text = text.split(from).join(to);
           changed = true;
         }
       }
@@ -133,8 +175,9 @@ function importSource(source, { skillsDir, thirdPartyRoot }) {
       copyDir(path.join(cloneDir, skill.from), path.join(skillsDir, skill.to));
     }
     rewriteRenames(skillsDir, source.skills);
+    applyLiteralRewrites(skillsDir, source.skills, source.rewrites);
     for (const skill of source.skills) {
-      stampMetadata(path.join(skillsDir, skill.to, 'SKILL.md'), source);
+      stampMetadata(path.join(skillsDir, skill.to, 'SKILL.md'), source, skill);
     }
     writeThirdPartyNotice(path.join(thirdPartyRoot, source.origin), source, cloneDir);
   } finally {
@@ -142,4 +185,4 @@ function importSource(source, { skillsDir, thirdPartyRoot }) {
   }
 }
 
-module.exports = { importSource, cloneAtSha, stampMetadata, rewriteRenames, splitFrontmatter };
+module.exports = { importSource, cloneAtSha, stampMetadata, rewriteRenames, applyLiteralRewrites, splitFrontmatter };
