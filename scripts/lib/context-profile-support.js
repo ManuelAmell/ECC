@@ -7,7 +7,10 @@ const { SUPPORTED_INSTALL_TARGETS } = require('./install-manifests');
 
 const DEFAULT_REPO_ROOT = path.resolve(__dirname, '../..');
 const MAX_FILE_BYTES = 4 * 1024 * 1024;
-const MAX_TOTAL_BYTES = 16 * 1024 * 1024;
+// Fork change (ManuelAmell/ECC, branch personal): upstream caps this at 16 MiB,
+// but the `full` profile now also ships the personal-* skill modules (UI/UX Pro
+// Max data, HyperFrames assets), ~30 MB in total. Per-file cap is unchanged.
+const MAX_TOTAL_BYTES = 64 * 1024 * 1024;
 const MAX_SOURCE_FILES = 10000;
 const MAX_DIRECTORY_ENTRIES = 10000;
 const MAX_TRAVERSAL_OPERATIONS = 20000;

@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 'use strict';
 
-// Regenerates the personal-* install modules from personal/sources.json and
-// adds them to the `full` profile.
+// Regenerates the personal-* install modules from personal/sources.json, adds
+// them to the `full` profile and to package.json `files`.
 //
 //   node scripts/personal/sync-manifests.js [--check]
 //
@@ -10,7 +10,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { syncModules } = require('../lib/personal-manifests');
+const { syncModules, syncPackageFiles, personalModulePaths } = require('../lib/personal-manifests');
 
 const ROOT = path.resolve(__dirname, '..', '..');
 const read = file => JSON.parse(fs.readFileSync(path.join(ROOT, file), 'utf8'));
@@ -24,9 +24,11 @@ function main() {
   const profiles = read('manifests/install-profiles.json');
   syncModules(modules, profiles, sources, definitions);
 
+  const packageText = fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8');
   const outputs = [
     ['manifests/install-modules.json', serialize(modules)],
-    ['manifests/install-profiles.json', serialize(profiles)]
+    ['manifests/install-profiles.json', serialize(profiles)],
+    ['package.json', syncPackageFiles(packageText, personalModulePaths(sources, definitions))]
   ];
   const stale = outputs.filter(([file, text]) => fs.readFileSync(path.join(ROOT, file), 'utf8') !== text);
   if (check) {

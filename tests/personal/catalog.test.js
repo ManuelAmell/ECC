@@ -81,3 +81,25 @@ test('real repo: the committed install manifests match what personal/sources.jso
   syncModules(modules, profiles, read('personal/sources.json').sources, read('personal/modules.json'));
   assert.strictEqual(JSON.stringify([modules, profiles]), before);
 });
+
+const { syncPackageFiles, personalModulePaths } = require('../../scripts/lib/personal-manifests');
+
+test('syncPackageFiles: inserts missing paths after the last skills/ entry and keeps formatting', () => {
+  const text = '{\n  "files": [\n    "agents/",\n    "skills/a",\n    "skills/b"\n  ]\n}\n';
+  const out = syncPackageFiles(text, ['skills/c', 'skills/a', 'skills/b0']);
+  assert.deepStrictEqual(JSON.parse(out).files, ['agents/', 'skills/a', 'skills/b', 'skills/b0', 'skills/c']);
+  assert.strictEqual(syncPackageFiles(out, ['skills/c']), out);
+  const withTail = '{\n  "files": [\n    "skills/a",\n    "docs/x"\n  ]\n}\n';
+  assert.deepStrictEqual(JSON.parse(syncPackageFiles(withTail, ['skills/z'])).files, ['skills/a', 'skills/z', 'docs/x']);
+});
+
+test('personalModulePaths: covers imported and own skills of every defined module', () => {
+  const paths = personalModulePaths([{ module: 'm', skills: [{ to: 'a' }] }], { m: { ownPaths: ['skills/own'] } });
+  assert.deepStrictEqual(paths, ['skills/a', 'skills/own']);
+});
+
+test('real repo: package.json files already lists every personal module path', () => {
+  const text = fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8');
+  const paths = personalModulePaths(read('personal/sources.json').sources, read('personal/modules.json'));
+  assert.strictEqual(syncPackageFiles(text, paths), text);
+});
